@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "08f1a932-a2d4-4b89-9a10-afbc10b2f742",
+		"_postman_id": "0d39428a-765b-4717-ac49-0473a26c2e27",
 		"name": "Spring Web Service",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "11972399"
@@ -12,7 +12,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/v1/user/all",
+					"raw": "http://localhost:8080/api/v1/user",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -21,8 +21,7 @@
 					"path": [
 						"api",
 						"v1",
-						"user",
-						"all"
+						"user"
 					]
 				}
 			},
@@ -46,10 +45,17 @@
 						"user",
 						":id"
 					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					],
 					"variable": [
 						{
 							"key": "id",
-							"value": "2"
+							"value": "1"
 						}
 					]
 				}
