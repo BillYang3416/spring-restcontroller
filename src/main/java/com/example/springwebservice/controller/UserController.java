@@ -17,7 +17,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping()
+    @GetMapping(produces = {"application/json", "application/xml"})
     public List<User> getAllUsers() {
 
         List<User> response = userService.getAllUsers();
