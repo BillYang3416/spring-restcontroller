@@ -1,6 +1,9 @@
 package com.example.springwebservice.controller;
 
-import com.example.springwebservice.model.User;
+import com.example.springwebservice.controller.dto.request.CreateUserRequest;
+import com.example.springwebservice.controller.dto.request.UpdateUserRequest;
+import com.example.springwebservice.controller.dto.response.StatusResponse;
+import com.example.springwebservice.model.entity.User;
 import com.example.springwebservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,26 +19,37 @@ public class UserController {
 
     @GetMapping()
     public List<User> getAllUsers() {
-        return null;
+
+        List<User> response = userService.getAllUsers();
+
+        return response;
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable int id) {
-        return null;
+    public User getUser(@PathVariable Long id) {
+        User response = userService.getUser(id);
+        return response;
     }
 
     @PostMapping()
-    public User createUser(@RequestBody User user) {
-        return null;
+    public StatusResponse createUser(@RequestBody CreateUserRequest request) {
+        String response = userService.createUser(request);
+
+        return new StatusResponse(response);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable int id,@RequestBody User user) {
-        return null;
+    public StatusResponse updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest request) {
+
+        String response = userService.updateUser(id, request);
+
+        return new StatusResponse(response);
     }
 
     @DeleteMapping("/{id}")
-    public User deleteUser(@PathVariable int id) {
-        return null;
+    public StatusResponse deleteUser(@PathVariable Long id) {
+        String response = userService.deleteUserById(id);
+
+        return new StatusResponse(response);
     }
 } // Class end
