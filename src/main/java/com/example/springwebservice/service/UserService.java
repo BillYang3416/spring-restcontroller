@@ -3,6 +3,7 @@ package com.example.springwebservice.service;
 import com.example.springwebservice.controller.dto.request.CreateUserRequest;
 import com.example.springwebservice.controller.dto.request.UpdateUserRequest;
 import com.example.springwebservice.model.UserRepository;
+import com.example.springwebservice.model.entity.Address;
 import com.example.springwebservice.model.entity.User;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,16 @@ public class UserService {
     // 新增一個 user 的資料
     public String createUser(CreateUserRequest request) {
 
+        User user = getUser(request);
+
+        // 儲存進 DB
+        userRepository.save(user);
+
+        // 回傳 OK 告訴 Controller 完成儲存
+        return "OK";
+    }
+
+    private User getUser(CreateUserRequest request) {
         // 新增一個空的 user 的 entity = 新增一筆空的資料
         User user = new User();
 
@@ -41,12 +52,41 @@ public class UserService {
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setAge(request.getAge());
+        user.setGender(request.getGender());
+        user.setAddress(getAddress(request, user));
+        return user;
+    }
 
-        // 儲存進 DB
-        userRepository.save(user);
+    private User getUser(User user, UpdateUserRequest request) {
+        // 塞好資料：user 裡的資料是從 request 來的
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setAge(request.getAge());
+        user.setGender(request.getGender());
+        user.setAddress(getAddress(request, user));
+        return user;
+    }
 
-        // 回傳 OK 告訴 Controller 完成儲存
-        return "OK";
+
+    private Address getAddress(CreateUserRequest request, User user) {
+        Address address = new Address();
+        address.setUser(user);
+        address.setCity(request.getAddress().getCity());
+        address.setCountry(request.getAddress().getCountry());
+        address.setState(request.getAddress().getState());
+        address.setStreet(request.getAddress().getStreet());
+        address.setZipCode(request.getAddress().getZipCode());
+        return address;
+    }
+
+    private Address getAddress(UpdateUserRequest request, User user) {
+        Address address = user.getAddress();
+        address.setCity(request.getAddress().getCity());
+        address.setCountry(request.getAddress().getCountry());
+        address.setState(request.getAddress().getState());
+        address.setStreet(request.getAddress().getStreet());
+        address.setZipCode(request.getAddress().getZipCode());
+        return address;
     }
 
     public String updateUser(Long id, UpdateUserRequest request) {
@@ -58,9 +98,7 @@ public class UserService {
         }
 
         // 將要更改的值塞進去
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setAge(request.getAge());
+        user = getUser(user, request);
 
         // 儲存進 DB
         userRepository.save(user);

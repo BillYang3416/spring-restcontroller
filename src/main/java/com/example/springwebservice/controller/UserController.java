@@ -2,12 +2,14 @@ package com.example.springwebservice.controller;
 
 import com.example.springwebservice.controller.dto.request.CreateUserRequest;
 import com.example.springwebservice.controller.dto.request.UpdateUserRequest;
+import com.example.springwebservice.controller.dto.response.QueryUserResponse;
 import com.example.springwebservice.controller.dto.response.StatusResponse;
 import com.example.springwebservice.model.entity.User;
 import com.example.springwebservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,16 +20,24 @@ public class UserController {
     UserService userService;
 
     @GetMapping(produces = {"application/json", "application/xml"})
-    public List<User> getAllUsers() {
+    public List<QueryUserResponse> getAllUsers() {
 
-        List<User> response = userService.getAllUsers();
+        List<User> users = userService.getAllUsers();
+        List<QueryUserResponse> queryUserResponses = new ArrayList<>();
+        users.forEach(user -> {
+            QueryUserResponse response = new QueryUserResponse();
+            response.convert(user);
+            queryUserResponses.add(response);
+        });
 
-        return response;
+        return queryUserResponses;
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id) {
-        User response = userService.getUser(id);
+    public QueryUserResponse getUser(@PathVariable Long id) {
+        User user = userService.getUser(id);
+        QueryUserResponse response = new QueryUserResponse();
+        response.convert(user);
         return response;
     }
 
