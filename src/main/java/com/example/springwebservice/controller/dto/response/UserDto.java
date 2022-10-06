@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class QueryUserResponse {
+public class UserDto {
 
 
     private String firstName;
@@ -24,6 +24,8 @@ public class QueryUserResponse {
 
     private List<AccountDto> accounts = new ArrayList<>();
 
+    private List<RoleDto> roles = new ArrayList<>();
+
 
     public void convert(User user) {
         this.firstName = user.getFirstName();
@@ -36,7 +38,18 @@ public class QueryUserResponse {
         if (user.getAccountList().size() != 0) {
             fillAccountList(user);
         }
+        if (user.getRoleList().size() != 0) {
+            fillRoleList(user);
+        }
 
+    }
+
+    private void fillRoleList(User user) {
+        user.getRoleList().forEach(role -> {
+            RoleDto roleDto = new RoleDto();
+            roleDto.setName(role.getName());
+            this.roles.add(roleDto);
+        });
     }
 
     private void fillAccountList(User user) {

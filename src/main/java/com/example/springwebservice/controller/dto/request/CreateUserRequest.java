@@ -2,6 +2,7 @@ package com.example.springwebservice.controller.dto.request;
 
 import com.example.springwebservice.controller.dto.response.AccountDto;
 import com.example.springwebservice.controller.dto.response.AddressDto;
+import com.example.springwebservice.controller.dto.response.RoleDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class CreateUserRequest {
     private String gender;
     private AddressDto address;
     private List<AccountDto> accounts = new ArrayList<>();
+    private List<RoleDto> roles;
 }
 
 

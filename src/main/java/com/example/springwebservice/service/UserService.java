@@ -2,26 +2,26 @@ package com.example.springwebservice.service;
 
 import com.example.springwebservice.controller.dto.request.CreateUserRequest;
 import com.example.springwebservice.controller.dto.request.UpdateUserRequest;
+import com.example.springwebservice.model.RoleRepository;
 import com.example.springwebservice.model.UserRepository;
 import com.example.springwebservice.model.entity.Account;
 import com.example.springwebservice.model.entity.Address;
+import com.example.springwebservice.model.entity.Role;
 import com.example.springwebservice.model.entity.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
-
-    private List<User> userList;
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final RoleRepository roleRepository;
+
 
     public List<User> getAllUsers() {
         List<User> response = userRepository.findAll();
@@ -58,7 +58,37 @@ public class UserService {
         user.setGender(request.getGender());
         user.setAddress(getRequestAddress(request, user));
         user.setAccountList(getRequestAccounts(request, user));
+        setRequestRoles(request, user);
         return user;
+    }
+
+    private void setRequestRoles(CreateUserRequest request, User user) {
+        List<Role> roleList = roleRepository.findAll();
+        request.getRoles().forEach(roleDto -> {
+            Role role = roleList.stream().filter(r -> r.getName().equals(roleDto.getName())).findAny().orElse(null);
+            if (role == null) {
+                Role newRole = new Role();
+                newRole.setName(roleDto.getName());
+                user.addRole(newRole);
+            } else {
+                user.addRole(role);
+            }
+        });
+    }
+
+    private void setRequestRoles(UpdateUserRequest request, User user) {
+        List<Role> roleList = roleRepository.findAll();
+        user.getRoleList().clear();
+        request.getRoles().forEach(roleDto -> {
+            Role role = roleList.stream().filter(r -> r.getName().equals(roleDto.getName())).findAny().orElse(null);
+            if (role == null) {
+                Role newRole = new Role();
+                newRole.setName(roleDto.getName());
+                user.addRole(newRole);
+            } else {
+                user.addRole(role);
+            }
+        });
     }
 
     private User getRequestUser(User user, UpdateUserRequest request) {
@@ -69,6 +99,7 @@ public class UserService {
         user.setGender(request.getGender());
         user.setAddress(getRequestAddress(request, user));
         user.setAccountList(getRequestAccounts(request, user));
+        setRequestRoles(request, user);
         return user;
     }
 
@@ -92,21 +123,11 @@ public class UserService {
         accountList.forEach(a -> a.setUser(null));
         accountList.clear();
         request.getAccounts().forEach(account -> {
-
-            Optional<Account> accountOptional = accountList.stream().filter(a -> a.getAccNo().equals(account.getAccNo())).findAny();
-            accountOptional.ifPresentOrElse((value) -> {
-                Account updatedAccount = accountOptional.get();
-                updatedAccount.setUser(user);
-                updatedAccount.setAccNo(account.getAccNo());
-                updatedAccount.setBalance(account.getBalance());
-            }, () -> {
-                Account newAccount = new Account();
-                newAccount.setUser(user);
-                newAccount.setAccNo(account.getAccNo());
-                newAccount.setBalance(account.getBalance());
-                accountList.add(newAccount);
-            });
-
+            Account newAccount = new Account();
+            newAccount.setUser(user);
+            newAccount.setAccNo(account.getAccNo());
+            newAccount.setBalance(account.getBalance());
+            accountList.add(newAccount);
         });
         return accountList;
     }

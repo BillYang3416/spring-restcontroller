@@ -2,7 +2,7 @@ package com.example.springwebservice.controller;
 
 import com.example.springwebservice.controller.dto.request.CreateUserRequest;
 import com.example.springwebservice.controller.dto.request.UpdateUserRequest;
-import com.example.springwebservice.controller.dto.response.QueryUserResponse;
+import com.example.springwebservice.controller.dto.response.UserDto;
 import com.example.springwebservice.controller.dto.response.StatusResponse;
 import com.example.springwebservice.model.entity.User;
 import com.example.springwebservice.service.UserService;
@@ -20,23 +20,23 @@ public class UserController {
     UserService userService;
 
     @GetMapping(produces = {"application/json", "application/xml"})
-    public List<QueryUserResponse> getAllUsers() {
+    public List<UserDto> getAllUsers() {
 
         List<User> users = userService.getAllUsers();
-        List<QueryUserResponse> queryUserResponses = new ArrayList<>();
+        List<UserDto> userDtos = new ArrayList<>();
         users.forEach(user -> {
-            QueryUserResponse response = new QueryUserResponse();
+            UserDto response = new UserDto();
             response.convert(user);
-            queryUserResponses.add(response);
+            userDtos.add(response);
         });
 
-        return queryUserResponses;
+        return userDtos;
     }
 
     @GetMapping("/{id}")
-    public QueryUserResponse getUser(@PathVariable Long id) {
+    public UserDto getUser(@PathVariable Long id) {
         User user = userService.getUser(id);
-        QueryUserResponse response = new QueryUserResponse();
+        UserDto response = new UserDto();
         response.convert(user);
         return response;
     }
