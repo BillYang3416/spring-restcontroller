@@ -1,9 +1,13 @@
 package com.example.springwebservice.controller.dto.request;
 
+import com.example.springwebservice.controller.dto.response.AccountDto;
+import com.example.springwebservice.controller.dto.response.AddressDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,22 +20,8 @@ public class UpdateUserRequest {
     private int age;
     private String gender;
 
-    private Address address;
+    private AddressDto address;
 
+    private List<AccountDto> accounts;
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public class Address {
-        private String city;
-
-        private String country;
-
-        private String state;
-
-        private String street;
-
-        private String zipCode;
-    }
 }

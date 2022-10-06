@@ -3,6 +3,9 @@ package com.example.springwebservice.controller.dto.response;
 import com.example.springwebservice.model.entity.User;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,23 +20,10 @@ public class QueryUserResponse {
 
     private String gender;
 
-    private Address address = new Address();
+    private AddressDto address = new AddressDto();
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public class Address {
-        private String city;
+    private List<AccountDto> accounts = new ArrayList<>();
 
-        private String country;
-
-        private String state;
-
-        private String street;
-
-        private String zipCode;
-    }
 
     public void convert(User user) {
         this.firstName = user.getFirstName();
@@ -41,13 +31,29 @@ public class QueryUserResponse {
         this.age = user.getAge();
         this.gender = user.getGender();
         if (user.getAddress() != null) {
-            this.address.setCity(user.getAddress().getCity());
-            this.address.setCountry(user.getAddress().getCountry());
-            this.address.setState(user.getAddress().getState());
-            this.address.setStreet(user.getAddress().getStreet());
-            this.address.setZipCode(user.getAddress().getZipCode());
+            fillAddress(user);
+        }
+        if (user.getAccountList().size() != 0) {
+            fillAccountList(user);
         }
 
+    }
+
+    private void fillAccountList(User user) {
+        user.getAccountList().forEach(account -> {
+            AccountDto accountRes = new AccountDto();
+            accountRes.setAccNo(account.getAccNo());
+            accountRes.setBalance(account.getBalance());
+            this.accounts.add(accountRes);
+        });
+    }
+
+    private void fillAddress(User user) {
+        this.address.setCity(user.getAddress().getCity());
+        this.address.setCountry(user.getAddress().getCountry());
+        this.address.setState(user.getAddress().getState());
+        this.address.setStreet(user.getAddress().getStreet());
+        this.address.setZipCode(user.getAddress().getZipCode());
     }
 
 }
