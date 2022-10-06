@@ -40,6 +40,5 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Account> accountList = new ArrayList<>();
 
-    // ref: https://betterprogramming.pub/how-to-delete-child-records-in-onetomany-relationship-from-database-in-jpa-38d78e02d7a1
 
 }
